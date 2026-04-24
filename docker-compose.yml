@@ -1,0 +1,61 @@
+# ==========================================
+# USEFUL DOCKER COMMANDS
+# ==========================================
+# 1. Start the entire project (with your OpenAI key):
+#    $env:OPENAI_API_KEY="sk-..." ; docker-compose up --build -d
+# 2. View logs (e.g., backend logs to check for errors):
+#    docker-compose logs -f backend
+# 3. Stop containers (without deleting data):
+#    docker-compose down
+# 4. Stop and DELETE ALL DATA (reset DB and Memory):
+#    docker-compose down -v
+# ==========================================
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: memory_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: asistente_memoria
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: memory_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@db:5432/asistente_memoria
+      - SECRET_KEY=jwt_super_secret_key_change_me
+      - CHROMA_PERSIST_DIR=/app/chroma_data
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - chroma_data:/app/chroma_data
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: memory_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  chroma_data:
