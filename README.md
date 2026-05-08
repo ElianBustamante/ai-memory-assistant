@@ -33,6 +33,13 @@ This project is a modern Full-Stack application split into independent microserv
 - **Icons**: Lucide React.
 - **State Management**: React Context API for global Authentication state.
 
+### Testing (Backend)
+
+- **Framework**: [pytest](https://docs.pytest.org/) and `pytest-asyncio` for robust, asynchronous unit tests.
+- **API Testing**: FastAPI's `TestClient` for endpoint validation.
+- **Mocking**: Python's native `unittest.mock` to simulate external dependencies (like OpenAI and ChromaDB).
+- **Test Database**: In-memory **SQLite** via SQLAlchemy `StaticPool` to ensure clean, isolated database transactions during tests.
+
 ---
 
 ## Running with Docker (Recommended)
@@ -133,6 +140,12 @@ The frontend will be available at [http://localhost:5173](http://localhost:5173)
 - `POST /chat` - Send a message to the AI (Requires Auth). Streams the response and includes the retrieved semantic memories in the first chunk.
 - `GET /profile/inferences` - Retrieve all the persistent facts the AI has learned about the current user.
 - `DELETE /profile/inferences/{id}` - Forget a specific fact.
+
+---
+
+## 🚀 Future Deployment
+
+The application is fully containerized and production-ready. A cloud deployment strategy is currently being planned to host the application live on the web, taking full advantage of the robust `docker-compose` orchestration for easy scaling and portability.
 
 ## License
 
