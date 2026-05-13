@@ -3,9 +3,12 @@ FROM node:20-alpine as build
 
 WORKDIR /app
 
+# Install pnpm v9
+RUN npm install -g pnpm@9
+
 # Install dependencies
-COPY package*.json ./
-RUN npm install
+COPY package*.json pnpm-lock.yaml* ./
+RUN pnpm install
 
 # Copy application code
 COPY . .
@@ -15,7 +18,7 @@ COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine

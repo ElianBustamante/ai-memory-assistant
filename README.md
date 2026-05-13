@@ -125,8 +125,8 @@ Install and run:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 The frontend will be available at [http://localhost:5173](http://localhost:5173).
